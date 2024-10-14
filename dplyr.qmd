@@ -1,12 +1,6 @@
 ---
 title: "dplyr101"
 author: "Lou Dhiver"
-format: html
-editor: visual
----
----
-title: "Dplyr 101"
-author: "Fabrice Rossi"
 format: 
   html:
     code-fold: true
