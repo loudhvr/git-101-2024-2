@@ -478,5 +478,9 @@ lapply(z, typeof)
 sapply(z,length)
 ```
 
-
+## Functions 
+### Anonymous short functions 
+```{r}
+lapply(z, \(y) ) ## not the same y as before 
+```
 
