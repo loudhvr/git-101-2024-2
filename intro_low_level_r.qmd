@@ -1,0 +1,425 @@
+---
+title: "Low level R"
+author: "Lou Dhiver"
+format: html
+---
+
+## R objects
+
+R has variables that are used to access objects:
+
+- functions
+- data
+
+### Functions
+
+A function provides an action over objects or R itself. 
+
+#### R related functions
+
+```{r}
+## this is the i_am function defined in the package here
+## in general package::function
+here::i_am("git-101-2024-2.Rproj")
+## library loads the functions defined in a package (here)
+library(here)
+```
+
+#### Functions that operate on objects
+
+```{r}
+class(1.0)
+class(class)
+```
+
+If `f` is a function, `f(...)` applies the function to its parameters while 
+`f` is the function as an object. 
+
+## Data
+
+Data objects can be separated into two main categories:
+
+- vector: a finite set of values of a given type (like integers)
+- list: a finite set of vectors (possibly of different types)
+
+### Numerical vectors
+
+```{r}
+x <- 2
+x
+## x is a numeric vector
+class(x)
+## the type of x content is double
+typeof(x)
+```
+
+```{r}
+y <- 2L ## make clear to R that 2 is an integer (add L)
+y
+## y is a integer vector
+class(y)
+## the type of y content is integer
+typeof(y)
+```
+
+```{r}
+## square root calculation
+z <- sqrt(y)
+class(z)
+typeof(z)
+z
+```
+
+```{r}
+## c is a construction function
+x2 <- c(-2, 3, -1.5)
+class(x2)
+typeof(x2)
+x2
+```
+
+Most of the functions operate in vectorized mode, i.e. their actions are applied
+to each element of a vector independently from the other elements.
+
+```{r}
+## absolute value
+y2 <- abs(x2)
+y2
+```
+
+```{r}
+sqrt(abs(x2))
+```
+
+```{r}
+#| warning: false
+sqrt(x2)
+```
+
+The special value `NaN` stands for *Not a Number* and is used when a numerical 
+value cannot be associated to a mathematical expression. 
+
+#### Numerical expressions
+
+```{r}
+x3 <- c(1, 2, -4)
+y3 <- c(-1, 7, 42)
+x3 + y3
+```
+
+```{r}
+## vectorized product
+x3 * y3
+```
+
+```{r}
+z3 <- (x3 * y3) / (x3 + y3)
+z3
+```
+
+```{r}
+z3 + abs(z3)
+z3 + x3
+```
+
+### Individual access
+
+```{r}
+## sequence from 0 to 5 (both included) with 0.5 increment (default 1)
+x <- seq(0, 5, 0.5)
+x
+```
+
+```{r}
+length(x)
+```
+
+```{r}
+## access to the third value in x
+x[3]
+```
+
+```{r}
+## out of range access gives NA
+x[12]
+```
+
+The special value `NA` stands for `Not Available`. It is used for missing data
+for instance.
+
+```{r}
+class(x[12])
+typeof(x[12])
+```
+
+```{r}
+## access to multiple values (sub-vector)
+x[c(2, 4, 10)]
+```
+
+```{r}
+## access to multiple values (sub-vector)
+## negative values "remove" non wanted values
+x[c(-2, -4, -10)]
+```
+
+```{r}
+## a:b represents in a very efficient way the sequence from a to b (included) with
+## 1 increment
+x[4:8]
+```
+
+```{r}
+x <- seq(-5, 5)
+x[x > 0]
+y <- seq(1, 11)
+x[y / 3 < x]
+x[c(TRUE, FALSE)]
+```
+
+
+### Reusing values
+
+```{r}
+x1 <- 5
+x2 <- seq(0, 4)
+x1
+x2
+```
+
+```{r}
+x1 + x2 ## ??
+```
+
+```{r}
+x2 + 1
+```
+
+```{r}
+2 * x2 - 1
+```
+
+```{r}
+1 / x2
+```
+
+```{r}
+y <- seq(0, 5)
+z <- c(1, -1)
+y + z
+```
+
+```{r}
+y <- seq(0, 4)
+z <- c(1, -1)
+y + z
+```
+
+### Other types
+#### Characters
+```{r}
+x <- seq(4, -2, -1)
+x
+y <- class(x)
+y
+```
+
+```{r}
+class(y)
+typeof(y)
+```
+
+```{r}
+z <- c("toto", "titi")
+class(z)
+typeof(z)
+z
+```
+
+In base R, "characters" are essentially monolithic. Use the `stringr` package to 
+access the characters themselves.
+
+```{r}
+z[1][1]
+```
+
+```{r}
+x <- seq(4, -2, -1)
+y <- as.character(x)
+y
+x + 2
+## does not work as y is not numeric: y + 2
+```
+
+```{r}
+x <- c("1.5", "12", "toto")
+y <- as.numeric(x)
+y
+```
+
+#### Logical
+
+The logical type is obtained as the result of logical operations such as 
+comparisons (comparisons are vectorized).
+
+```{r}
+z <- seq(-2, 2)
+y <- z > 0
+y
+class(y)
+typeof(y)
+```
+
+```{r}
+z == 0 ## equality
+z != 0 ## difference
+z >= 1
+```
+
+```{r}
+y <- c(TRUE, FALSE, FALSE, TRUE)
+y
+```
+
+```{r}
+## useless
+y == TRUE
+## non explicit
+y != TRUE
+## negation operator
+!y
+```
+
+In addition to the negation operator, we have *or* `|` and *and* `&`.
+
+```{r}
+z <- seq(-5, 5)
+(z >= 4) | (z <= -3)
+(z < 3) & (z >= -2)
+```
+
+```{r}
+(z[2] > 4) | (z < 0) ## values are reused
+```
+
+### Factors
+Factors are used to represented nominal and ordinal variables.
+
+```{r}
+z <- c("F", "F", "H", "F", "H")
+z
+class(z)
+y <- as.factor(z)
+y
+class(y)
+length(y)
+levels(y) ## modalities
+x <- levels(y)
+class(x)
+```
+
+```{r}
+z <- c("F", "F", "h", "F", "H")
+as.factor(z)
+y <- factor(z, levels = c("F", "H"))
+y
+```
+
+```{r}
+y == "F"
+y[-(1:3)]
+y + 2
+```
+
+### Aggregation operators
+Aggregation operators are functions that map a vector to a single value, for instance
+the mean. 
+
+```{r}
+x <- seq(3, 12, 0.25)
+x
+```
+
+```{r}
+mean(x)
+min(x)
+max(x)
+sd(x)
+median(x)
+```
+
+```{r}
+any(x == 8) ## at least one TRUE
+all(x > 0) ## all TRUE
+```
+
+```{r}
+## scaling x to zero mean and one standard deviation
+y <- (x - mean(x)) / sd(x)
+y
+mean(y)
+sd(y)
+```
+
+## List
+A list is a collection of vectors that may have different types.
+
+### Basic operations
+```{r}
+x <- list(c(1, 2, 3), c("x", "y"), TRUE)
+x
+```
+
+```{r}
+class(x)
+typeof(x)
+```
+
+```{r}
+length(x)
+lengths(x) ## length applied to each element of the list
+```
+
+Access to elements of the list is different should not be confused to sublist
+extraction.
+
+```{r}
+x[1] ## sublist
+x[[1]] ## element
+```
+
+```{r}
+class(x[1])
+length(x[1])
+class(x[[1]])
+length(x[[1]])
+```
+
+```{r}
+x[-1]
+```
+
+### Functional operations
+```{r}
+## our version of lengths
+sapply(x, length)
+```
+
+```{r}
+lapply(x, length)
+```
+
+```{r}
+lapply(x, class)
+```
+
+```{r}
+lapply(x, mean)
+```
+
+`sapply` tries to turn the result list into a vector if all results have the same
+class/type. 
+
+```{r}
+sapply(x, class)
+```
