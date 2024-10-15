@@ -423,3 +423,41 @@ class/type.
 ```{r}
 sapply(x, class)
 ```
+
+```{r}
+y <- list(1:4, list(TRUE, seq(1,5,2), list(c("CD","BAD"))), c(TRUE, FALSE))
+y 
+```
+
+### Naming elements 
+```{r}
+z<-list(num= c(1.5, 2.7, -42), 
+        log = c(TRUE, FALSE), 
+        chr = c("AB","CD"))
+z
+```
+Dollars sign : alternative way to access the list content, with the name. 
+
+```{r}
+z$log ##z[[2]]
+```
+
+```{r}
+z["log"] ## sublist (simple bracket) 
+z[["log"]] ##content (double bracket) 
+```
+```{r}
+z[c("log", "num")] ##single bracket is a vector oriented process 
+```
+```{r}
+z$chr
+```
+```{r}
+names(z)
+names(y)
+```
+
+
+
+
+
