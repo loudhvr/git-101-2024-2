@@ -457,7 +457,26 @@ names(z)
 names(y)
 ```
 
+#### list apply 
 
+```{r}
+z_l <- lengths(z)
+z_l
+```
+```{r}
+class(z_l)
+names(z_l)
+```
+```{r}
+lapply(z, length)
+```
+```{r}
+lapply(z, class)
+lapply(z, typeof)
+```
+```{r}
+sapply(z,length)
+```
 
 
 
